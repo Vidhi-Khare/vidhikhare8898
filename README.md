@@ -1,8 +1,8 @@
 # Various System Calls Implementation
 
-## SystemCall.c
+## SystemCalls.c
 
-### int main(argc, char \*\*argv)
+### int main(int argc, char \*\*argv)
 _Description_ : Takes and analyzes the command line arguments and passes the control to appropriate file type method.
 
 _Parameters_ :
@@ -19,7 +19,7 @@ _Parameters_ :
         - write
         - status
       - Offset (int) -> Provides random access of file for read and write mode of operation
-      - Whence (String) -> Specifies the position, from where to place the offset
+      - Whence (String) -> Specifies the position, where to place the offset from
         - current
         - start
         - end
@@ -55,7 +55,7 @@ _Return_ : None.
 _Description_ : Creates the new named pipe with the name as file_name and 010777 as rwx permissions using mknod system call.
 
 _Parameters_ :
-  1. file_name (char \*) -> name of the file to be created.
+  1. file_name (char \*) -> Name of the named pipe to be created
 
 _Return_ : 1 on success, else exit.
 
@@ -65,7 +65,7 @@ _Return_ : 1 on success, else exit.
 _Description_ : Opens the pipe named as file_name in the specified mode.
 
 _Parameters_ :
-  1. file_name (char \*) -> name of the named pipe to be opened.
+  1. file_name (char \*) -> Name of the named pipe to be opened
   2. mode (int)
       - read
       - write
@@ -86,7 +86,7 @@ _Return_ : None.
 _Description_ : Opens the named pipe in read mode using open_named_pipe method and reads the data from the named pipe using read system call, after completion of read it closes the named pipe using close_named_pipe method.  
 
 _Parameters_ :
-  1. file_name (char \*)
+  1. file_name (char \*) -> Name of the named pipe from where the read is to be performed
 
 _Return_ : None.
 
@@ -95,7 +95,7 @@ _Return_ : None.
 _Description_ : Opens the named pipe in write mode using open_named_pipe method and writes the data to the named pipe using write system call, after completion of  write it closes the named pipe using close_named_pipe method.
 
 _Parameters_ :
-  1. file_name (char \*)
+  1. file_name (char \*) -> Name of the named pipe to which the write is to be performed
 
 _Return_ : None.
 
@@ -104,7 +104,7 @@ _Return_ : None.
 _Description_ : Prints the status of the pipe named as file_name using the stat system call.
 
 _Parameters_ :
-  1. file_name (char \*)
+  1. file_name (char \*) -> Name of the named pipe whose status is to be displayed
 
 _Return_ : None.
 
@@ -123,7 +123,6 @@ _Parameters_ :
         - npipe : Named pipe
         - **unpipe : Unnamed Pipe**
         - regular : Regular File
-      - Name of the file (String)
 
 _Return_ : None.
 
@@ -132,13 +131,13 @@ _Return_ : None.
 _Description_ : Creates a unnamed pipe using pipe system call and performs read and write operations over unnamed pipe using read and write system call respectively, after completion it closes the unnamed pipe using close system call.
 
 _Parameters_ :
-  1. file_name (char \*) -> name of the pipe, here it is equivalent to type of file.
+  1. file_name (char \*) -> Name of the pipe, here it is equivalent to type of file
 
 _Return_ : None.
 
 ## RegularFile.h
 
-Implements the create, read, write and status functionalities for reguar files.
+Implements the create, read, write and status functionalities for regular files.
 
 ### void regular_file(int argc, char \*\*argv)
 
@@ -158,7 +157,7 @@ _Parameters_ :
         - write
         - status
       - Offset (int) -> Provides random access of file for read and write mode of operation
-      - Whence (String) -> Specifies the position of where to place the offset
+      - Whence (String) -> Specifies the position, where to place the offset from
         - current
         - start
         - end
@@ -170,7 +169,7 @@ _Return_ : None.
 _Description_ : Creates the new regular file with the name as file_name and 00777 as rwx permissions using creat system call.
 
 _Parameters_ :
-  1. file_name (char \*) -> name of the regular file to be created.
+  1. file_name (char \*) -> Name of the regular file to be created
 
 _Return_ : 1 on success, else exit.
 
@@ -180,7 +179,7 @@ _Return_ : 1 on success, else exit.
 _Description_ : Opens the regular file named as file_name in the specified mode.
 
 _Parameters_ :
-  1. file_name (char \*) -> name of the regular file to be opened.
+  1. file_name (char \*) -> Name of the regular file to be opened
   2. oflag (int)
       - read
       - write
@@ -193,6 +192,7 @@ _Description_ : Closes the regular file with the file descriptor as fd (returned
 
 _Parameters_ :  
   1. fd (int) -> File descriptor of the opened regular file
+  
 _Return_ : None.
 
 ### int lseek_random_file(int fd, int offset, char \*whence)
@@ -202,7 +202,7 @@ _Description_ : Places the read and write pointer as a specific position in the 
 _Parameters_ :
   1. fd (int) -> File descriptor of the opened regular file
   2. offset (int) -> Position from where to start reading/writing from a regular file
-  3. whence (char \*) -> Specifies the position of where to place the offset.
+  3. whence (char \*) -> Specifies the position, where to place the offset from
       - current : SEEK_CUR
       - start : SEEK_SET
       - end : SEEK_END
@@ -214,9 +214,9 @@ _Return_ : 0 on Success, -1 on Failure.
 _Description_ : Opens the regular file in read mode using open_regular_file method, also provides option for random read from the file using lseek_regular_file method and reads the data from the file accordingly using read system call, after completion of read it closes the regular file using close_regular_file method.  
 
 _Parameters_ :
-  1. file_name (char \*)
-  2. offset (int) -> Position from where to start reading from a regular file
-  3. whence (char \*) -> Specifies the position of where to place the offset
+  1. file_name (char \*) -> Name of the regular file from where the read is to be performed
+  2. offset (int) (Default - INT_MIN) -> Position from where to start reading from a regular file
+  3. whence (char \*) (Default - "") -> Specifies the position, where to place the offset from
         - current
         - start
         - end
@@ -225,15 +225,15 @@ _Return_ : None.
 
 ### void write_regular_file(char \*file_name, int offset, char \*whence)
 
-_Description_ : Opens the regular file in write mode using open_regular_file method, also provides option for random write to the file using lseek_regular_file method and writes data to the file accordingly using write system call, after completion of write it closes the regular file using close_regular_file method.  
+_Description_ : Opens the regular file in write mode using open_regular_file method, also provides option for random write to the file using lseek_regular_file method and writes the data to the file accordingly using write system call, after completion of write it closes the regular file using close_regular_file method.  
 
 _Parameters_ :
-  1. file_name (char \*)
-  2. offset (int) -> Position from where to start writing to a regular file
-  3. whence (char \*) -> Specifies the position of where to place the offset
-    - current
-    - start
-    - end
+  1. file_name (char \*) -> Name of the regular file to which the write is to be performed
+  2. offset (int) (Default - INT_MIN) -> Position from where to start writing to a regular file
+  3. whence (char \*) (Default - "") -> Specifies the position, where to place the offset from
+      - current
+      - start
+      - end
 
 _Return_ : None.
 
@@ -242,6 +242,6 @@ _Return_ : None.
 _Description_ : Prints the status of the regular file with name file_name using the stat system call.
 
 _Parameters_ :
-  1. file_name (char \*)
+  1. file_name (char \*) -> Name of the regular file whose status is to be displayed
 
 _Return_ : None.
